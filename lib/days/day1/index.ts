@@ -4,14 +4,18 @@ import { Day } from '..';
 
 export const meta: Day['meta'] = {};
 
-export function part1() {
-  const data = cleanAndParse(input, Number);
+function parseElves() {
+  return input.split("\n\n").map(
+    elf => cleanAndParse(elf, Number).reduce((a, b) => a + b)
+  );
+}
 
-  return data.length;
+export function part1() {
+  return Math.max(...parseElves());
 }
 
 export function part2() {
-  const data = cleanAndParse(input, Number);
+  const topThree = parseElves().sort((a, b) => a - b).slice(-3);
 
-  return data.length;
+  return topThree.reduce((a, b) => a + b);
 }
