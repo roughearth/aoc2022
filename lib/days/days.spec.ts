@@ -2,6 +2,8 @@ import { Days } from '.';
 import { safetyNet } from '../utils';
 import { currentDay } from '../utils/dates';
 
+console.log(process.env.TODAY)
+
 // for day 13
 const PFKLKCFP = `
 ###..####.#..#.#....#..#..##..####.###..
@@ -14,7 +16,7 @@ const PFKLKCFP = `
 
 const dayResults: [number, number | string, number | string][] = [
 // day,  part 1 answer     , part 2 answer
-  [ 1 ,  1                 , 1                  ],
+  [1, 67027, 197291],
   [ 2 ,  1                 , 1                  ],
   [ 3 ,  1                 , 1                  ],
   [ 4 ,  1                 , 1                  ],
