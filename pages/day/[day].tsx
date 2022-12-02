@@ -1,11 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Days } from "../../lib/days";
 import { safetyNet, timeAndRun } from "../../lib/utils";
-import leaderBoardMap from '../../lib/.leaderboardListRc.json'
-import { currentDay } from "../../lib/utils/dates";
-
+import Nav from "../../components/nav";
 
 const App: React.FC = () => {
   const router = useRouter()
@@ -70,19 +67,7 @@ const App: React.FC = () => {
         </div>
       </div>
 
-      <h4>Nav</h4>
-      <ul>
-        {leaderBoardMap && leaderBoardMap.map(([id, name]) => (
-          <li key={id}>
-            <a href={`https://adventofcode.com/2022/leaderboard/private/view/${id}`} target="_blank" rel="noreferrer">{name} leaderboard</a>
-          </li>
-        ))}
-        <li><Link href={`${currentDay()}`}>Today</Link></li>
-        <li>{
-          Array.from({ length: 25 }, (_, i) => <span key={i}><Link href={`${i + 1}`}>{i + 1}</Link> </span>)
-        }</li>
-        <li><a href="https://adventofcode.com/2022/" target="_blank" rel="noreferrer">AoC 2022</a></li>
-      </ul>
+      <Nav />
     </>
   );
 }

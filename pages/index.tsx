@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Nav from '../components/nav'
 import styles from '../styles/Home.module.css'
 
 export default function Home() {
@@ -12,9 +13,7 @@ export default function Home() {
         <h1 className={styles.title}>
           AoC 2022
         </h1>
-        <ul>
-          <li>Day 1</li>
-        </ul>
+        <Nav />
       </main>
     </div>
   )
