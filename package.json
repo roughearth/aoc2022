@@ -10,7 +10,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:days": "jest --watch days",
-    "test:today": "TODAY=yes && jest --watch days"
+    "test:today": "DAY=today jest --watch days"
   },
   "dependencies": {
     "@types/node": "18.11.9",

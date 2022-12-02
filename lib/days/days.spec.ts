@@ -1,23 +1,31 @@
 import { Days } from '.';
 import { safetyNet } from '../utils';
-import { currentDay } from '../utils/dates';
+import { determineDay } from '../utils/dates';
 
-console.log(process.env.TODAY)
+function dayFilter(d: number) {
+  const day = determineDay();
 
-// for day 13
-const PFKLKCFP = `
-###..####.#..#.#....#..#..##..####.###..
-#..#.#....#.#..#....#.#..#..#.#....#..#.
-#..#.###..##...#....##...#....###..#..#.
-###..#....#.#..#....#.#..#....#....###..
-#....#....#.#..#....#.#..#..#.#....#....
-#....#....#..#.####.#..#..##..#....#....
-`.trim();
+  if (day < 0 || day > 25) {
+    return true;
+  }
 
-const dayResults: [number, number | string, number | string][] = [
+  if (process.env.DAY === "today") {
+    return d === day;
+  }
+
+  const envDay = Number(process.env.DAY);
+
+  if (envDay >= 1 && envDay <= 25) {
+    return d === envDay;
+  }
+
+  return true;
+}
+
+const dayResults = (<[number, number | string, number | string][]>[
 // day,  part 1 answer     , part 2 answer
-  [1, 67027, 197291],
-  [ 2 ,  1                 , 1                  ],
+  [ 1 ,  67027             , 197291             ],
+  [ 2 ,  13809             , 12316              ],
   [ 3 ,  1                 , 1                  ],
   [ 4 ,  1                 , 1                  ],
   [ 5 ,  1                 , 1                  ],
@@ -41,7 +49,7 @@ const dayResults: [number, number | string, number | string][] = [
   [ 23,  1                 , 1                  ],
   [ 24,  1                 , 1                  ],
   [ 25,  1                 , "Merry Xmas!"      ]
-].filter(([d]) => d === currentDay());
+]).filter(([d]) => dayFilter(d));
 
 describe.each(dayResults)("Day %i", (d: number, ans1?: number | string, ans2?: number | string) => {
   const day = Days[`day${d}`];
