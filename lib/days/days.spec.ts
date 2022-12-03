@@ -26,7 +26,7 @@ const dayResults = (<[number, number | string, number | string][]>[
 // day,  part 1 answer     , part 2 answer
   [ 1 ,  67027             , 197291             ],
   [ 2 ,  13809             , 12316              ],
-  [ 3 ,  1                 , 1                  ],
+  [ 3 ,  7967              , 2716               ],
   [ 4 ,  1                 , 1                  ],
   [ 5 ,  1                 , 1                  ],
   [ 6 ,  1                 , 1                  ],
