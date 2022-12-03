@@ -19,7 +19,8 @@ Courtesy of a rather lovely Christmas present, this years Advent of Code will be
 ![Advent of Coffee](public/adventofcoffee.jpg)
 
 
-| Day                | Name    | Country  | Variety    | Process        | Roast | Acidity | Mouthfeel | Hints of...                 | Score / 10 |
-|--------------------|---------|----------|------------|----------------|-------|---------|-----------|-----------------------------|------------|
-| [1](lib/days/day1) | El Tolu | Colombia | Castillo   | Washed         | Light | Orange  | Silky     | Lavender & Honey            | 5          |
-| [2](lib/days/day2) | Zaroca  | Brazil   | Mundo Novo | Pulped Natural | Dark  | Apple   | Creamy    | Dark chocolate & cocoa nibs | 6          |
+| Day                             | Name     | Country                      | Variety    | Process        | Roast | Acidity | Mouthfeel | Hints of...                 | Score / 10 |
+|---------------------------------|----------|------------------------------|------------|----------------|-------|---------|-----------|-----------------------------|------------|
+| [1](lib/days/day1#coffee-notes) | El Tolu  | Colombia                     | Castillo   | Washed         | Light | Orange  | Silky     | Lavender & Honey            | 5          |
+| [2](lib/days/day2#coffee-notes) | Zaroca   | Brazil                       | Mundo Novo | Pulped Natural | Dark  | Apple   | Creamy    | Dark chocolate & cocoa nibs | 6          |
+| [3](lib/days/day3#coffee-notes) | Muungano | Democratic Republic of Congo | Bourbon    | Natural        | Light | Orange  | Velvety   | Maraschino Cherries         | 4          |

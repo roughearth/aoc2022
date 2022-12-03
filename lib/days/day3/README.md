@@ -6,4 +6,8 @@ Could probably do something a little more generic with a function to intersect N
 
 ## Coffee notes
 
-To follow
+| Name     | Grower                   | Country                      | Variety | Process | Roast | Acidity | Mouthfeel | Hints of...         | Score / 10 |
+|----------|--------------------------|------------------------------|---------|---------|-------|---------|-----------|---------------------|------------|
+| Muungano | A smallholder collective | Democratic Republic of Congo | Bourbon | Natural | Light | Orange  | Velvety   | Maraschino Cherries | 4          |
+
+* Strong enough, but not much taste
