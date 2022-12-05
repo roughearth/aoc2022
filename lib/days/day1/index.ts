@@ -19,3 +19,8 @@ export function part2() {
 
   return topThree.reduce((a, b) => a + b);
 }
+
+export const answers = [
+  67027,
+  197291
+];

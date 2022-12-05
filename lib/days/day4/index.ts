@@ -37,3 +37,8 @@ export function part2() {
 
   return data.length;
 }
+
+export const answers = [
+  433,
+  852
+];

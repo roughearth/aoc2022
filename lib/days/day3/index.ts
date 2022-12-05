@@ -41,3 +41,8 @@ export function part2() {
 
   return priorities.reduce((a, b) => a + b);
 }
+
+export const answers = [
+  7967,
+  2716
+];

@@ -1,5 +1,5 @@
 import { eg1, input } from './input';
-import { cleanAndParse } from '../../utils';
+import { cleanAndParse, generateArray } from '../../utils';
 import { Day } from '..';
 
 export const meta: Day['meta'] = {};
@@ -15,12 +15,12 @@ function parseInput(src: string, count: number) {
 
 function initialiseStacks(startStacks: string, count: number) {
   const lines = startStacks.split("\n");
-  const stacks: string[][] = Array.from({ length: count }, () => []);
+  const stacks: string[][] = generateArray(count, () => []);
   lines.pop(); // remove the index row
 
   for (const line of lines) {
     for (let i = 0; i < count; i++) {
-      const crate = line.substr(4 * i + 1, 1).trim();
+      const crate = line[4 * i + 1]?.trim();
 
       if (crate) {
         stacks[i].unshift(crate);
@@ -43,12 +43,25 @@ type Instruction = ReturnType<typeof parseInstruction>;
 
 
 function runInstructionPart1(stacks: Stacks, instruction: Instruction): void {
-  const fromIndex = instruction.from - 1;
-  const toIndex = instruction.to - 1;
+  const { move, from, to } = instruction;
 
-  for (let i = 0; i < instruction.move; i++) {
+  const fromIndex = from - 1;
+  const toIndex = to - 1;
+
+  for (let i = 0; i < move; i++) {
     stacks[toIndex].push(<string>stacks[fromIndex].pop());
   }
+}
+
+function runInstructionPart2(stacks: Stacks, instruction: Instruction): void {
+  const { move, from, to } = instruction;
+
+  const fromIndex = from - 1;
+  const toIndex = to - 1;
+
+  const subStack = stacks[fromIndex].splice(-move, move);
+
+  stacks[toIndex] = [...stacks[toIndex], ...subStack];
 }
 
 function getStackTops(stacks: Stacks): string {
@@ -67,15 +80,6 @@ export function part1() {
   return getStackTops(stacks);
 }
 
-function runInstructionPart2(stacks: Stacks, instruction: Instruction): void {
-  const fromIndex = instruction.from - 1;
-  const toIndex = instruction.to - 1;
-
-  const subStack = stacks[fromIndex].splice(-instruction.move, instruction.move);
-
-  stacks[toIndex] = [...stacks[toIndex], ...subStack];
-}
-
 export function part2() {
   const { stacks, instructions } = parseInput(input, 9);
 
@@ -85,3 +89,8 @@ export function part2() {
 
   return getStackTops(stacks);
 }
+
+export const answers = [
+  'SHMSDGZVC',
+  'VRZGHDFBQ'
+];

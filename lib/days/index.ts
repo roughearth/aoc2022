@@ -29,6 +29,7 @@ import * as day25 from './day25';
 export type Day = {
   part1: (f: SafetyNet) => string | number;
   part2: (f: SafetyNet) => string | number;
+  answers?: (string | number)[],
   meta?: {
     manualStart?: boolean;
     maxLoops?: number;

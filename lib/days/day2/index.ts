@@ -63,3 +63,8 @@ export function part2() {
 
   return data.reduce((a, b) => a + b);
 }
+
+export const answers = [
+  13809,
+  12316
+];
