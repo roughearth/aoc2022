@@ -4,14 +4,29 @@ import { Day } from '..';
 
 export const meta: Day['meta'] = {};
 
-export function part1() {
-  const data = cleanAndParse(input, Number);
+function find(n: number) {
+  const last = input.length - n;
 
-  return data.length;
+  for (let i = 0; i < last; i++) {
+    const chars = new Set(Array.from(input.slice(i, i + n)));
+
+    if (chars.size === n) {
+      return i + n;
+    }
+  }
+
+  throw new Error("Not found");
+}
+
+export function part1() {
+  return find(4);
 }
 
 export function part2() {
-  const data = cleanAndParse(input, Number);
-
-  return data.length;
+  return find(14);
 }
+
+export const answers = [
+  1538,
+  2315
+];
