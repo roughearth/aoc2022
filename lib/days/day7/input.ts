@@ -22,17 +22,6 @@ $ ls
 5626152 d.ext
 7214296 k`;
 
-
-export const eg2 = `$ cd /
-$ ls
-dir a
-14848514 b.txt
-8504156 c.dat
-dir d
-$ cd a
-`;
-
-
 export const input = `$ cd /
 $ ls
 dir hdwsmn
