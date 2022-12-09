@@ -6,7 +6,8 @@ Total 'mare of silly mistakes and typos today. As a result the final code is pro
 
 ## Coffee notes
 
-| Name        | Grower           | Country  | Variety | Process | Roast | Acidity | Mouthfeel | Hints of...                   | Score / 10 |
-|-------------|------------------|----------|---------|---------|-------|---------|-----------|-------------------------------|------------|
+| Name         | Grower                                            | Country  | Variety           | Process | Roast  | Acidity | Mouthfeel | Hints of... | Score / 10 |
+|--------------|---------------------------------------------------|----------|-------------------|---------|--------|---------|-----------|-------------|------------|
+| Buenos Aires | José Ramón Coliazos & Maria Del Rosario Ariza Coy | Colombia | Caturra, Castillo | Washed  | Medium | Grape   | Round     | Ripe plum   | 8          |
 
-To follow
+* Strong and tasty

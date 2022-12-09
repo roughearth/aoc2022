@@ -1,7 +1,10 @@
 import {Day} from '../days';
 
+type LogMessage = (ct: number, duration: number) => string | number;
+
 export type SafetyNet = {
-  fails: (logMessage?: (ct: number, duration: number) => string | number) => boolean;
+  fails: (logMessage?: LogMessage) => boolean;
+  isSafe: (logMessage?: LogMessage) => boolean;
   reason: string;
   duration: number;
   loops: number;
@@ -34,6 +37,9 @@ export function safetyNet({
       }
 
       return false;
+    },
+    isSafe(logMessage) {
+      return !this.fails(logMessage);
     },
     get reason() {
       return `${reason} (${ct} loops in ${duration}ms)`;

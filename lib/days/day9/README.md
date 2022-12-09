@@ -6,4 +6,10 @@ Oooh, ran correctly first time! Rather pleased with that, especially since the p
 
 ## Coffee notes
 
-To follow.
+| Name           | Grower                   | Country | Variety | Process | Roast  | Acidity | Mouthfeel | Hints of...        | Score / 10 |
+|----------------|--------------------------|---------|---------|---------|--------|---------|-----------|--------------------|------------|
+| Remera Natural | A smallholder collective | Rwanda  | Bourbon | Natural | Medium | Creamy  | Creamy    | Strawberry & cream | 9          |
+
+* Strong and tasty
+* Sweet too - definite hints of cream!
+* Favourite so far
