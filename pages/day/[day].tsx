@@ -51,7 +51,7 @@ const App: React.FC = () => {
       <div className="parts">
         <div className="part">
           <h2>Part 1</h2>
-          <p><big><b>{result1}</b></big></p>
+          <pre><big><b>{result1}</b></big></pre>
           <p><small><i>(in {duration1}ms)</i></small></p>
           {manualStart && <p>
             <button type="button" onClick={startPart1}>start</button>
@@ -59,7 +59,7 @@ const App: React.FC = () => {
         </div>
         <div className="part">
           <h2>Part 2</h2>
-          <p><big><b>{result2}</b></big></p>
+          <pre><big><b>{result2}</b></big></pre>
           <p><small><i>(in {duration2}ms)</i></small></p>
           {manualStart && <p>
             <button type="button" onClick={startPart2}>start</button>
