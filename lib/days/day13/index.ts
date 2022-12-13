@@ -14,7 +14,7 @@ function isNumber(a: any): a is number {
   return !Array.isArray(a);
 }
 
-function compare(a: any[], b: any[]): boolean | undefined {
+function compare(a: any[], b: any[]): number {
   const l = Math.min(a.length, b.length);
 
   for (let i = 0; i < l; i++) {
@@ -23,10 +23,10 @@ function compare(a: any[], b: any[]): boolean | undefined {
 
     if (isNumber(A) && isNumber(B)) {
       if (A < B) {
-        return true;
+        return -1;
       }
       if (A > B) {
-        return false;
+        return 1;
       }
     }
     else {
@@ -39,28 +39,32 @@ function compare(a: any[], b: any[]): boolean | undefined {
 
       const C = compare(A, B);
 
-      if (C !== undefined) {
+      if (C !== 0) {
         return C;
       }
     }
   }
 
   if (a.length < b.length) {
-    return true;
+    return -1;
   }
   if (a.length > b.length) {
-    return false;
+    return 1;
   }
 
-  // fall through to returning `undefined` as the "move on" marker (ternary logic)
+  return 0;
 }
 
 export function part1() {
   const data = cleanAndParse(input, Pair, { separator: '\n\n' });
 
-  const resultList = data.map(p => compare(p[0], p[1]));
+  const resultList = data.map(([p, q]) => compare(p, q));
 
-  return resultList.flatMap((b, i) => b ? [i + 1] : []).reduce((a, b) => a + b);
+  return resultList.flatMap(
+    (b, i) => (b === -1) ? [i + 1] : []
+  ).reduce(
+    (a, b) => a + b
+  );
 }
 
 export function part2() {
@@ -70,19 +74,7 @@ export function part2() {
     ...cleanAndParse(input, Pair, { separator: '\n\n' }).flat()
   ];
 
-  data.sort((a, b) => {
-    const c = compare(a, b);
-
-    if (c === true) {
-      return -1;
-    }
-
-    if (c === false) {
-      return 1;
-    }
-
-    return 0;
-  });
+  data.sort(compare);
 
   let i2 = 0;
   let i6 = 0;
