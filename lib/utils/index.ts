@@ -1,3 +1,4 @@
+export * from './array';
 export * from './combi';
 export * from './data';
 export * from './grid';
