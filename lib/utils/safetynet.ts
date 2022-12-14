@@ -39,7 +39,10 @@ export function safetyNet({
       return false;
     },
     isSafe(logMessage) {
-      return !this.fails(logMessage);
+      if (this.fails(logMessage)) {
+        throw new Error(this.reason);
+      }
+      return true;
     },
     get reason() {
       return `${reason} (${ct} loops in ${duration}ms)`;
