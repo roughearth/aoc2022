@@ -31,24 +31,6 @@ export function indexifyAsMap<T, S>(
   }, new Map<S, T>());
 }
 
-export function generateArray<T>(length: number, generate: (i: number) => T): T[] {
-  return Array.from(
-    {length},
-    (_, i) => generate(i)
-  );
-}
-
-export function segmentArray<T>(list: T[], size: number): T[][] {
-  const segments = [];
-
-  for (let i = 0, l = list.length; i < l; i += size) {
-    segments.push(list.slice(i, i + size));
-  }
-
-  return segments;
-}
-
-
 export function timeAndRun<T extends string | number>(fn: () => T ): [result: T, duration: number] {
   const then = performance.now();
   const result = fn();

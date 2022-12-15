@@ -25,6 +25,10 @@ export function growRange(range: CoordinateRange, by = 1): CoordinateRange {
   return range.map(([min, max]) => [min - by, max + by]);
 }
 
+export function cloneRange(range: CoordinateRange): CoordinateRange {
+  return range.map(([min, max]) => [min, max]);
+}
+
 /**
  * Tests if a given coordinate lies within a given range
  * @param coord
