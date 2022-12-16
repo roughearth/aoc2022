@@ -25,11 +25,11 @@ import * as day23 from './day23';
 import * as day24 from './day24';
 import * as day25 from './day25';
 
-
+export type Answer = string | number;
 export type Day = {
-  part1: (f: SafetyNet) => string | number;
-  part2: (f: SafetyNet) => string | number;
-  answers?: (string | number)[],
+  part1: (f: SafetyNet) => Answer;
+  part2: (f: SafetyNet) => Answer;
+  answers?: (Answer | Symbol)[],
   meta?: {
     manualStart?: boolean;
     maxLoops?: number;

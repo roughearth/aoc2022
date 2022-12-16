@@ -30,14 +30,22 @@ describe.each(dayResults)("Day %i", (d: number) => {
   const [ans1, ans2] = day.answers ?? [];
 
   if (ans1) {
+    if (ans1 === Symbol.for('skip')) {
+      test.skip("Part 1", () => { });
+    }
     test("Part 1", () => {
       expect(day.part1(safetyNet(day.meta))).toEqual(ans1);
     });
   }
 
   if (ans2) {
-    test("Part 2", () => {
-      expect(day.part2(safetyNet(day.meta))).toEqual(ans2);
-    });
+    if (ans2 === Symbol.for('skip')) {
+      test.skip("Part 2", () => { });
+    }
+    else {
+      test("Part 2", () => {
+        expect(day.part2(safetyNet(day.meta))).toEqual(ans2);
+      });
+    }
   }
 });

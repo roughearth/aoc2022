@@ -1,5 +1,5 @@
 import { eg1, input } from './input';
-import { cleanAndParse, segmentArray } from '../../utils';
+import { cleanAndParse, chunk } from '../../utils';
 import { Day } from '..';
 
 export const meta: Day['meta'] = {};
@@ -35,7 +35,7 @@ function parseGroupPart2(elfs: string[]) {
 }
 
 export function part2() {
-  const groups = segmentArray(cleanAndParse(input), 3);
+  const groups = chunk(cleanAndParse(input), 3);
 
   const priorities = groups.map(parseGroupPart2);
 
