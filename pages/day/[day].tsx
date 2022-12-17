@@ -69,6 +69,7 @@ const App: React.FC = () => {
           setPart2(["", 0]);
         }
         else {
+          console.clear();
           startPart1();
           startPart2();
         }
