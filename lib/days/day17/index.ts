@@ -9,9 +9,6 @@ export const meta: Day['meta'] = {
 type Edge = number[];
 type Cells = number[][];
 type Rock = {
-  left: Edge,
-  right: Edge,
-  bottom: Edge,
   cells: (x: number, y: number) => Cells
 }
 type Stack = Map<number, Set<number>>;
@@ -20,9 +17,6 @@ type Stack = Map<number, Set<number>>;
 const ROCKS: Rock[] = [
   // ####
   {
-    left: [0],
-    right: [3],
-    bottom: [0, 1, 2, 3],
     cells: (x: number, y: number) => [
       [0, 0],
       [1, 0],
@@ -35,9 +29,6 @@ const ROCKS: Rock[] = [
   // ###
   // .#.
   {
-    left: [0, 1, 4],
-    right: [0, 3, 4],
-    bottom: [0, 1, 3],
     cells: (x: number, y: number) => [
       [1, 0],
       [0, 1],
@@ -51,9 +42,6 @@ const ROCKS: Rock[] = [
   // ..#
   // ###
   {
-    left: [0],
-    right: [2, 3, 4],
-    bottom: [0, 1, 2],
     cells: (x: number, y: number) => [
       [0, 0],
       [1, 0],
@@ -68,9 +56,6 @@ const ROCKS: Rock[] = [
   // #
   // #
   {
-    left: [0, 1, 2, 3],
-    right: [0, 1, 2, 3],
-    bottom: [0],
     cells: (x: number, y: number) => [
       [0, 0],
       [0, 1],
@@ -82,9 +67,6 @@ const ROCKS: Rock[] = [
   // ##
   // ##
   {
-    left: [0, 2],
-    right: [1, 3],
-    bottom: [0, 1],
     cells: (x: number, y: number) => [
       [0, 0],
       [1, 0],
@@ -98,12 +80,13 @@ const LEFT_WALL = 0;
 const RIGHT_WALL = 6;
 const FLOOR = 0;
 
-type Wind = ['left' | 'right', 1 | -1]
+type Wind = 1 | -1;
+
 function parseWind(src: string): Wind[] {
   return Array.from(src).map(
     i => <Wind>({
-      '<': ['left', -1],
-      '>': ['right', 1],
+      '<': -1,
+      '>': 1,
     }[i])
   );
 }
@@ -152,29 +135,27 @@ function visualise(stack: Stack, cells?: Cells) {
   return rows.reverse().map(r => r.join("")).join("\n");
 }
 
-export function part1(safetyNet: SafetyNet) {
-  const wind = parseWind(input);
+function* run(src: string, safetyNet: SafetyNet): Generator<RunYeild, void, unknown> {
+  const wind = parseWind(src);
   const windSize = wind.length;
 
   let nextWind = 0;
   let nextRock = 0;
-
-  let Rocks = 2022;
+  let height = 0;
 
   // Use this as Y, X to make tracking height easier
-  let stack: Stack = new Map();
+  const stack: Stack = new Map();
 
-  while (Rocks--) {
+  while (safetyNet.isSafe()) {
     const thisRock = ROCKS[nextRock];
 
-    let height = Math.max(-1, ...Array.from(stack.keys())) + 1;
     let nextX = 2;
     let nextY = height + 3;
 
     move:
     while (safetyNet.isSafe()) {
       // move (and increment) wind if poss
-      const [wDir, wInc] = wind[nextWind];
+      const wInc = wind[nextWind];
       nextWind = (nextWind + 1) % windSize;
       const wRock = thisRock.cells(nextX + wInc, nextY);
 
@@ -197,6 +178,10 @@ export function part1(safetyNet: SafetyNet) {
           stack.get(y)!.add(x);
         }
 
+        height = Math.max(-1, ...Array.from(stack.keys())) + 1;
+
+        yield [height, stack, nextWind, nextRock];
+
         // ..and break inner loop
         break move;
       }
@@ -204,12 +189,78 @@ export function part1(safetyNet: SafetyNet) {
 
     nextRock = (nextRock + 1) % 5;
   }
-
-  return Math.max(0, ...Array.from(stack.keys())) + 1;
 }
 
-export function part2() {
-  const wind = Array.from(input);
+type RunYeild = [number, Stack, number, number];
 
-  return -999;
+export function part1(safetyNet: SafetyNet) {
+  const runner = run(input, safetyNet);
+
+  let rocks = 0;
+  let data: RunYeild;
+
+  while ((++rocks) <= 2022) {
+    data = runner.next().value!;
+  }
+
+  return data![0];
 }
+
+function fringe([, stack, windId, rockId]: RunYeild, rocks: number): [string, number] {
+  const colHeight = Array(7).fill(0);
+  for (const [row, values] of stack.entries()) {
+    for (const value of values) {
+      colHeight[value] = Math.max(colHeight[value], row + 1);
+    }
+  }
+
+  const min = Math.min(...colHeight);
+
+  // the key is the rock and wind ids, with a normalised shape of the top of the stack
+  // if this repeats, the stack goes in to a loop
+  return [
+    [windId, rockId, colHeight.map(v => v - min)].join(","),
+    rocks
+  ];
+}
+
+export function part2(safetyNet: SafetyNet) {
+  const runner = run(input, safetyNet);
+
+  let rocks = 0;
+  let data: RunYeild;
+  const loopMap = new Map<string, number>();
+  let loopFound: number[] = [];
+  let rockHeight = new Map<number, number>();
+
+  while (true) { // runner uses safety net
+    data = runner.next().value!;
+    rocks++;
+    const [key, value] = fringe(data, rocks);
+    rockHeight.set(rocks, data[0]);
+    if (loopMap.has(key)) {
+      loopFound = [value, loopMap.get(key)!];
+      break;
+    }
+    loopMap.set(key, value);
+  }
+
+  const targetRocks = 1000000000000;
+  const [rockTo, rockFrom] = loopFound;
+  const loopLength = rockTo - rockFrom;
+  const rocksInLoop = targetRocks - rockFrom;
+  const remainder = rocksInLoop % loopLength;
+  const quotient = (rocksInLoop - remainder) / loopLength;
+
+  const heightAtLoopStart = rockHeight.get(rockFrom)!;
+  const heightAtLoopEnd = rockHeight.get(rockTo)!;
+  const loopHeight = heightAtLoopEnd - heightAtLoopStart;
+  const heightAtLoopRemainder = rockHeight.get(rockFrom + remainder)!;
+
+  return heightAtLoopRemainder + (quotient * loopHeight);
+}
+
+export const answers = [
+  3227,
+  1597714285698
+]
