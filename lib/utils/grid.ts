@@ -1,3 +1,5 @@
+import { generateArray } from "./array";
+
 export type CoordinateRange = [number, number][];
 export type Coordinate = number[];
 /**
@@ -28,6 +30,39 @@ export function growRange(range: CoordinateRange, by = 1): CoordinateRange {
 export function cloneRange(range: CoordinateRange): CoordinateRange {
   return range.map(([min, max]) => [min, max]);
 }
+
+export function findRange(coords: Coordinate[]): CoordinateRange {
+  if (coords.length === 0) {
+    throw new Error("Cannot find the range of an empty set");
+  }
+
+  let dims = coords[0].length;
+
+  if (dims === 0) {
+    throw new Error("Cannot find the range of a set with zero dimensions (first point determines dimensions).");
+  }
+
+  let range: CoordinateRange = generateArray(
+    dims,
+    () => [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER]
+  );
+
+  for (const coord of coords) {
+    if (coord.length !== dims) {
+      throw new Error("Cannot find the range of a set of points with mixed dimensions (first point determines dimensions).");
+    }
+
+    for (let d = 0; d < dims; d++) {
+      range[d] = [
+        Math.min(coord[d], range[d][0]),
+        Math.max(coord[d], range[d][1])
+      ]
+    }
+  }
+
+  return range;
+}
+
 
 /**
  * Tests if a given coordinate lies within a given range
