@@ -49,13 +49,35 @@ const App: React.FC = () => {
   );
 
   const startPart1 = useCallback(
-    () => setPart1(timeAndRun(() => part1(safetyNet(meta)))),
-    [part1, meta]
+    () => {
+      if (manualStart) {
+        console.log("Part 1 started");
+      }
+      setPart1(timeAndRun(() => {
+        const ans = part1(safetyNet(meta))
+        if (manualStart) {
+          console.log("Part 1 returned", ans);
+        }
+        return ans;
+      }));
+    },
+    [manualStart, part1, meta]
   )
 
   const startPart2 = useCallback(
-    () => setPart2(timeAndRun(() => part2(safetyNet(meta)))),
-    [part2, meta]
+    () => {
+      if (manualStart) {
+        console.log("Part 2 started");
+      }
+      setPart2(timeAndRun(() => {
+        const ans = part2(safetyNet(meta))
+        if (manualStart) {
+          console.log("Part 2 returned", ans);
+        }
+        return ans;
+      }));
+    },
+    [manualStart, part2, meta]
   )
 
   const [[result1, duration1], setPart1] = useState<[string | number, number]>(["", 0]);

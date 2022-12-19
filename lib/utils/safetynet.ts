@@ -22,7 +22,7 @@ export function safetyNet({
 
   return {
     fails(logMessage) {
-      duration = Math.round(performance.now() - start);
+      duration = this.duration;
       if (++ct > maxLoops){
         reason = "Too many loops. Controlled by `meta.maxLoops`.  Use a `logMessage` function to show intermediate steps.";
         return true;
@@ -47,7 +47,7 @@ export function safetyNet({
     get reason() {
       return `${reason} (${ct} loops in ${duration}ms)`;
     },
-    get duration() { return duration; },
+    get duration() { return Math.round(performance.now() - start); },
     get loops() { return ct; }
   };
 }
