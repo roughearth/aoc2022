@@ -13,12 +13,14 @@ export type SafetyNet = {
 export function safetyNet({
   maxLoops = 1e4,
   maxMs = 5_000,
-  logLoopInterval = (maxLoops / 10)
+  logLoopInterval = 0,
+  logMsInterval = 0
 }: Day['meta'] = {}): SafetyNet {
   let start = performance.now();
   let ct = 0;
   let duration = 0;
   let reason = "pass";
+  let lastLogMs = 0;
 
   return {
     fails(logMessage) {
@@ -32,7 +34,15 @@ export function safetyNet({
         return true;
       }
 
-      if (logMessage && (logLoopInterval > 0) && !(ct % logLoopInterval)) {
+      const logLoops = logMessage && (logLoopInterval > 0);
+      const logMs = logMessage && (logMsInterval > 0);
+
+      if (logLoops && !(ct % logLoopInterval)) {
+        console.log(logMessage(ct, duration))
+      }
+
+      if (logMs && ((duration - lastLogMs) >= logMsInterval)) {
+        lastLogMs = duration;
         console.log(logMessage(ct, duration))
       }
 

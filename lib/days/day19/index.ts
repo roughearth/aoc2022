@@ -1,11 +1,12 @@
 import { eg1, input } from './input';
-import { cleanAndParse, SafetyNet, sumOf } from '../../utils';
+import { cleanAndParse, productOf, SafetyNet, sumOf } from '../../utils';
 import { Day } from '..';
 
 export const meta: Day['meta'] = {
   manualStart: true,
-  maxMs: 1200_000,
-  maxLoops: 1e12
+  maxMs: 8 * 60 * 60 * 1_000,
+  logMsInterval: 5_000,
+  maxLoops: Infinity
 };
 
 function parseBlueprint(src: string, i: number) {
@@ -54,6 +55,7 @@ function max(id: number, safetyNet: SafetyNet) {
       }
     },
     value() {
+      safetyNet.isSafe((_, duration) => `heartbeat @ ${duration}`);
       return max;
     }
   }
@@ -64,6 +66,7 @@ function findBest(
   safetyNet: SafetyNet,
   max: Max,
   blueprint: Blueprint,
+  minutesLeft: number,
   oreRobots: number,
   clayRobots: number,
   obsidianRobots: number,
@@ -71,29 +74,8 @@ function findBest(
   ore: number,
   clay: number,
   obsidian: number,
-  geodes: number,
-  minutesGone: number
+  geodes: number
 ): number {
-  __log(
-    `#${blueprint.id} @ ${minutesGone}`
-  );
-  __log(
-    "Robots",
-    oreRobots,
-    clayRobots,
-    obsidianRobots,
-    geodeRobots
-  );
-  __log(
-    "Mined ",
-    ore,
-    clay,
-    obsidian,
-    geodes
-  );
-
-  safetyNet.isSafe();
-
   const {
     oreOre,
     clayOre,
@@ -103,33 +85,25 @@ function findBest(
     geodeObsidian
   } = blueprint;
 
-  const timeLimit = 24;
-
-  // if (obsidianClay + geodeObsidian > timeLimit) {
-  //   return 0;
-  // }
-
-  if (minutesGone === 24) {
+  if (minutesLeft === 0) {
     max.set(geodes);
     return geodes;
   }
 
-  const minuteLeft = timeLimit - minutesGone;
-
-  const upperBound = geodes + geodeRobots * minuteLeft + (minuteLeft * (minuteLeft + 1) * 0.5);
+  const upperBound = geodes + geodeRobots * minutesLeft + (minutesLeft * (minutesLeft + 1) * 0.5);
 
   if (upperBound < max.value()) {
     return -1;
   }
 
-  minutesGone++;
+  minutesLeft--;
 
   const results: number[] = [];
 
   const canMakeGeodeRobot = (ore >= geodeOre) && (obsidian >= geodeObsidian);
   const canMakeObsidianRobot = (obsidianRobots < geodeObsidian) && (ore >= obsidianOre) && (clay >= obsidianClay);
   const canMakeClayRobot = (clayRobots < obsidianClay) && (ore >= clayOre);
-  const canMakeOreRobot = (oreRobots <= Math.max(oreOre, clayOre, obsidianOre, geodeOre)) && (ore >= oreOre);
+  const canMakeOreRobot = (clayRobots === 0) && (oreRobots <= Math.max(oreOre, clayOre, obsidianOre, geodeOre)) && (ore >= oreOre);
 
   let makeGeodeRobot = false;
   let makeObsidianRobot = false;
@@ -140,10 +114,10 @@ function findBest(
   else if (canMakeGeodeRobot) {
     makeGeodeRobot = true;
   }
-  else if (canMakeObsidianRobot) {
-    makeObsidianRobot = true;
-  }
   else {
+    if (canMakeObsidianRobot) {
+      makeObsidianRobot = true;
+    }
     if (canMakeClayRobot) {
       makeClayRobot = true;
     }
@@ -152,18 +126,17 @@ function findBest(
     }
   }
 
-
   ore += oreRobots;
   clay += clayRobots;
   obsidian += obsidianRobots;
   geodes += geodeRobots;
 
   if (makeGeodeRobot) {
-    __log("make a geode robot");
     results.push(findBest(
       safetyNet,
       max,
       blueprint,
+      minutesLeft,
       oreRobots,
       clayRobots,
       obsidianRobots,
@@ -171,16 +144,16 @@ function findBest(
       ore - geodeOre,
       clay,
       obsidian - geodeObsidian,
-      geodes,
-      minutesGone
+      geodes
     ));
   }
+
   if (makeObsidianRobot) {
-    __log("make an obsidian robot");
     results.push(findBest(
       safetyNet,
       max,
       blueprint,
+      minutesLeft,
       oreRobots,
       clayRobots,
       obsidianRobots + 1,
@@ -188,17 +161,16 @@ function findBest(
       ore - obsidianOre,
       clay - obsidianClay,
       obsidian,
-      geodes,
-      minutesGone
+      geodes
     ));
   }
 
   if (makeClayRobot) {
-    __log("make a clay robot");
     results.push(findBest(
       safetyNet,
       max,
       blueprint,
+      minutesLeft,
       oreRobots,
       clayRobots + 1,
       obsidianRobots,
@@ -206,17 +178,16 @@ function findBest(
       ore - clayOre,
       clay,
       obsidian,
-      geodes,
-      minutesGone
+      geodes
     ));
   }
 
   if (makeOreRobot) {
-    __log("make an ore robot");
     results.push(findBest(
       safetyNet,
       max,
       blueprint,
+      minutesLeft,
       oreRobots + 1,
       clayRobots,
       obsidianRobots,
@@ -224,48 +195,54 @@ function findBest(
       ore - oreOre,
       clay,
       obsidian,
-      geodes,
-      minutesGone
+      geodes
     ));
   }
 
-  // if (results.length > 1) {
-  //   throw new Error(`too many robots made ${[makeGeodeRobot, makeObsidianRobot, makeClayRobot, makeOreRobot].join()}`)
-  // }
+  if (
+    !makeGeodeRobot ||
+    !makeObsidianRobot
+  ) {
+    results.push(findBest(
+      safetyNet,
+      max,
+      blueprint,
+      minutesLeft,
+      oreRobots,
+      clayRobots,
+      obsidianRobots,
+      geodeRobots,
+      ore,
+      clay,
+      obsidian,
+      geodes
+    ));
+  }
 
-  results.push(findBest(
-    safetyNet,
-    max,
-    blueprint,
-    oreRobots,
-    clayRobots,
-    obsidianRobots,
-    geodeRobots,
-    ore,
-    clay,
-    obsidian,
-    geodes,
-    minutesGone
-  ));
-
-  // console.log(results);
   return Math.max(...results);
 }
 
 export function part1(safetyNet: SafetyNet) {
   const blueprints = cleanAndParse(eg1, parseBlueprint);
 
-  const map = blueprints.map(blueprint => [blueprint.id, findBest(safetyNet, max(blueprint.id, safetyNet), blueprint, 1, 0, 0, 0, 0, 0, 0, 0, 0)])
+  const map = blueprints.map(blueprint => [blueprint.id, findBest(safetyNet, max(blueprint.id, safetyNet), blueprint, 24, 1, 0, 0, 0, 0, 0, 0, 0)])
 
   console.log(map);
-
-  // 181 too low
 
   return sumOf(map.map(([i, v]) => i * v));
 }
 
-export function part2() {
-  const data = cleanAndParse(input, Number);
+export function part2(safetyNet: SafetyNet) {
+  const blueprints = cleanAndParse(input, parseBlueprint).slice(0, 3);
 
-  return data.length;
+  const map = blueprints.map(blueprint => findBest(safetyNet, max(blueprint.id, safetyNet), blueprint, 32, 1, 0, 0, 0, 0, 0, 0, 0));
+
+  console.log(map);
+
+  return productOf(map);
 }
+
+export const answers = [
+  Symbol.for("skip"), // 851 in 11 mins
+  Symbol.for("skip") // 12160 in 14 mins
+];

@@ -35,6 +35,7 @@ export type Day = {
     maxLoops?: number;
     maxMs?: number;
     logLoopInterval?: number;
+    logMsInterval?: number;
   }
 }
 
