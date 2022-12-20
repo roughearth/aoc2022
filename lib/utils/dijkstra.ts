@@ -12,6 +12,14 @@ for (let [node, cost, path] of graph) {
 
 */
 
+export type NodeTuple<T> = [T, number, T[]];
+
+export type Dijkstra<T> = {
+  [Symbol.iterator]: () => Generator<NodeTuple<T>, void, unknown>,
+  find: (targetFn: (n: T) => boolean) => NodeTuple<T>,
+  cover: () => Map<T, [number, T[]]>
+};
+
 function nextUnvisitedNode<T>(unvisitedNodes: Set<T>, distanceMap: Map<T, number>) {
   let minVal = Number.MAX_SAFE_INTEGER;
   let min: T | undefined;
@@ -85,11 +93,3 @@ export function dijkstraFrom<T>(
     }
   }
 }
-
-export type NodeTuple<T> = [T, number, T[]];
-
-export type Dijkstra<T> = {
-  [Symbol.iterator]: () => Generator<NodeTuple<T>, void, unknown>,
-  find: (targetFn: (n: T) => boolean) => NodeTuple<T>,
-  cover: () => Map<T, [number, T[]]>
-};

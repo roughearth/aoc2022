@@ -9,12 +9,12 @@ export function chunk<T>(a: T[], size: number): T[][] {
   return a.flatMap((_, i, a) => (i % size) ? [] : [a.slice(i, i + size)]);
 }
 
-export function sumOf(a: number[], map: (i: any) => number = i => i): number {
-  return a.reduce((a, b) => map(a) + map(b));
+export function sumOf<T>(arr: T[], map: (i: T) => number = i => <number>i): number {
+  return arr.reduce((a, b) => a + map(b), 0);
 }
 
-export function productOf(a: number[], map: (i: any) => number = i => i): number {
-  return a.reduce((a, b) => map(a) * map(b));
+export function productOf<T>(arr: T[], map: (i: T) => number = i => <number>i): number {
+  return arr.reduce((a, b) => a * map(b), 1);
 }
 
 export function findBest<T>(a: T[], scoreFn: (i: T) => number): [T, number] {
