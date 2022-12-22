@@ -1,6 +1,7 @@
 import { generateArray } from "./array";
 
-export type CoordinateRange = [number, number][];
+export type CoordinateLimits = [number, number];
+export type CoordinateRange = CoordinateLimits[];
 export type Coordinate = number[];
 /**
  * Return a `CoordinateRange` from 0 with the given count of coordinates in each dimension
