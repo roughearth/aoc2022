@@ -107,3 +107,49 @@ export function gcd(a: number, b: number, ...more: number[]): number {
 
   return gcd(b, m);
 }
+
+export function bisect(
+  valueFn: (o: number) => number,
+  {
+    low = Number.MIN_SAFE_INTEGER,
+    high = Number.MAX_SAFE_INTEGER,
+    resolution = 1 // seeking an integer
+  }: {
+    low?: number
+    high?: number
+    resolution?: number
+  } = {}
+): number {
+  const FAIL = Symbol();
+  let ans: number | symbol = FAIL;
+  let loopsLeft = 100;
+
+  console.log(valueFn(low), valueFn(high));
+  if (valueFn(low) > valueFn(high)) {
+    [low, high] = [high, low];
+  }
+
+  loop:
+  do {
+    let mid = Math.floor((low + high) / 2);
+    const value = valueFn(mid);
+
+    if (value === 0) {
+      ans = mid;
+      break loop;
+    }
+    if (value > 0) {
+      low = mid;
+    }
+    else {
+      high = mid;
+    }
+  }
+  while ((Math.abs(high - low) > resolution) && loopsLeft--);
+
+  if (ans === FAIL) {
+    throw new Error(`Failed to bisect (low: ${low}, high: ${high}, loops left: ${loopsLeft})`);
+  }
+
+  return <number>ans;
+}
