@@ -96,7 +96,7 @@ export function run(src: string, part: number) {
 
   while (true) {
     let nextGeneration = new Set<string>();
-    const nextBlizzards = blizzardSetAt(srcBlizzards, minsPassed + 1, blizzardsByMinute, blizzardCycleLength);
+    const nextBlizzards = blizzardSetAt(srcBlizzards, minsPassed + 1);
 
     generations:
     for (const cell of currentGeneration) {
